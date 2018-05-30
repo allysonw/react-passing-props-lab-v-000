@@ -1,29 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class FilteredFruitList extends Component {
-  constructor(props) {
-    super(props);
+function FilteredFruitList(props) {
+  const list = filterFruits(props.fruit);
 
-    this.state = {
-      items: []
-    };
+  function filterFruits(items) {
+    return !props.filter || props.filter === 'all' ? items : items.filter(i => i.fruit_type === props.filter);
   }
 
-  componentDidMount() {
-    fetch('/api/fruit')
-      .then(response => response.json())
-      .then(items => this.setState({ items }));
-  }
+  return (
+    <ul className="fruit-list">
+      {list.map((item, index) => <li key={index}>{item.char}</li>)}
+    </ul>
+  );
+}
 
-  render() {
-    const list = !this.props.filter || this.props.filter === 'all' ? this.state.items : this.state.items.filter(i => i.fruit_type === this.props.filter);
-
-    return (
-      <ul className="fruit-list">
-        {list.map((item, index) => <li key={index}>{item.char}</li>)}
-      </ul>
-    );
-  }
+FilteredFruitList.defaultProps = {
+  fruit: [],
+  filter: ''
 }
 
 export default FilteredFruitList;
